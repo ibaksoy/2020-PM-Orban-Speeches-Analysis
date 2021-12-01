@@ -15,7 +15,7 @@
    #library("readr")
    #library("NLP")
    #library("tokenizers")
-# Upload/read txt document (hungary) this document includes speeches of PM Orban in 2020 related to foreign policy
+#Upload/read txt document (hungary) this document includes speeches of PM Orban in 2020 related to foreign policy
    #hungary <- read_lines("C:/Users/iremb/Desktop/hungary.txt")
    #read_lines(hungary)
 #Code

@@ -71,7 +71,7 @@ head(d, 10)
 
 hungary <- tm_map(hungary, removeWords, c("can", "must", "like"))
 
-hungary_tdm <- TermDocumentMatrix(hungary) #problem starts from here. Cannot change this to a matrix.
+hungary_tdm <- TermDocumentMatrix(hungary) 
 m <- as.matrix(hungary_tdm)
 v <- sort(rowSums(m), decreasing = TRUE)
 d <- data.frame(word = names(v), freq = v)

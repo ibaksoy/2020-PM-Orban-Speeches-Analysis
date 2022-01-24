@@ -1,0 +1,149 @@
+install.packages("tm") #Install the required packages
+install.packages("SnowballC")
+install.packages("wordcloud")
+install.packages("RColorBrewer")
+install.packages("dplyr")
+install.packages("tidytext")
+install.packages("tokenizers")
+install.packages("NLP")
+install.packages("readr")
+install.packages("tidyr")
+install.packages("qdap")
+install.packages("Rcpp")
+install.packages("gridExtra")
+
+
+
+library(tm) #Load the required packages
+library(SnowballC)
+library(wordcloud)
+library(RColorBrewer)
+library(dplyr)
+library(tidytext)
+library(tokenizers)
+library(NLP)
+library(readr)
+library(tidyr)
+library(qdap)
+library(Rcpp)
+library(gridExtra)
+
+
+HU <- readLines(file.choose()) #Import the text file
+hungary <- Corpus(VectorSource(HU)) #Load the text file as a corpus
+
+
+inspect(hungary) #Inspect the content
+
+#Cleaning the text
+
+hungary <- tm_map(hungary, content_transformer(tolower)) #Convert the text to lower case 
+hungary_tdm <- TermDocumentMatrix(hungary) #To avoid possible errors, run this code
+hungary <- tm_map(hungary, removeNumbers) #Remove numbers
+hungary_tdm <- TermDocumentMatrix(hungary) #To avoid possible errors, run this code
+hungary <- tm_map(hungary, removeWords, stopwords("english")) #Remove common English stopwords
+hungary_tdm <- TermDocumentMatrix(hungary) #To avoid possible errors, run this code
+hungary <- tm_map(hungary, removePunctuation) #Remove punctuation
+hungary_tdm <- TermDocumentMatrix(hungary) #To avoid possible errors, run this code
+
+
+inspect(hungary) #Inspect the document content
+
+#Build a Term Document Matrix
+
+hungary_tdm <- TermDocumentMatrix(hungary) 
+m <- as.matrix(hungary_tdm)
+v <- sort(rowSums(m), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+
+
+head(d, 20)
+
+#Clean the text by removing several meaningless words
+
+hungary <- tm_map(hungary, removeWords, c("will", "also", "two", "able", "important", "can", "must", "like", "country", "central"))
+
+hungary_tdm <- TermDocumentMatrix(hungary) 
+m <- as.matrix(hungary_tdm)
+v <- sort(rowSums(m), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+
+
+head(d, 20)
+
+#Cleaning
+
+hungary <- tm_map(hungary, removeWords, c("one", "see", "need", "now", "new"))
+
+hungary_tdm <- TermDocumentMatrix(hungary) 
+m <- as.matrix(hungary_tdm)
+v <- sort(rowSums(m), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+
+
+head(d, 20)
+
+#Cleaning
+
+hungary <- tm_map(hungary, removeWords, c("just", "increase", "western"))
+
+hungary_tdm <- TermDocumentMatrix(hungary) 
+m <- as.matrix(hungary_tdm)
+v <- sort(rowSums(m), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+
+head(d, 20)
+
+#Cleaning
+
+hungary <- tm_map(hungary, removeWords, c("time", "hungarians"))
+
+hungary_tdm <- TermDocumentMatrix(hungary) 
+m <- as.matrix(hungary_tdm)
+v <- sort(rowSums(m), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+
+head(d, 20)
+
+#Cleaning
+
+hungary <- tm_map(hungary, removeWords, c("today", "number"))
+
+hungary_tdm <- TermDocumentMatrix(hungary) 
+m <- as.matrix(hungary_tdm)
+v <- sort(rowSums(m), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+
+head(d, 20)
+
+#Cleaning
+
+hungary <- tm_map(hungary, removeWords, c("approach"))
+
+hungary_tdm <- TermDocumentMatrix(hungary) 
+m <- as.matrix(hungary_tdm)
+v <- sort(rowSums(m), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+
+head(d, 20)
+
+hungarytable <- head(d, 20)
+grid.table(hungarytable)
+
+#Generate the Word Cloud
+
+set.seed(1234)
+wordcloud(words = d$word, freq = d$freq, min.freq = 1, max.words = 100, random.order = FALSE, rot.per = 0.35, colors = brewer.pal(8, "Dark2"))
+
+#Find frequent terms and the associations 
+
+findFreqTerms(hungary_tdm, lowfreq = 4)
+
+findAssocs(hungary_tdm, terms = "hungary", corlimit = 0.3)
+
+head(d, 10)
+
+#Plot word frequencies To see top 10 words, do not forget to run head(d, 10) before this code.
+
+barplot(d[1:10,]$freq, las = 2, names.arg = d[1:10,]$word, col = "blue", main = "Most Frequent Words - Viktor Orban", ylab = "Word Frequencies", cex.names = 0.75)
+

@@ -11,6 +11,7 @@ install.packages("readr")
 install.packages("tidyr")
 install.packages("qdap")
 install.packages("Rcpp")
+install.packages("gridExtra")
 
 
 
@@ -26,6 +27,7 @@ library(readr)
 library(tidyr)
 library(qdap)
 library(Rcpp)
+library(gridExtra)
 
 
 HU <- readLines(file.choose()) #Import the text file
@@ -56,11 +58,11 @@ v <- sort(rowSums(m), decreasing = TRUE)
 d <- data.frame(word = names(v), freq = v)
 
 
-head(d, 10)
+head(d, 20)
 
 #Clean the text by removing several meaningless words
 
-hungary <- tm_map(hungary, removeWords, c("will", "also", "two", "able", "important"))
+hungary <- tm_map(hungary, removeWords, c("will", "also", "two", "able", "important", "can", "must", "like", "country", "central"))
 
 hungary_tdm <- TermDocumentMatrix(hungary) 
 m <- as.matrix(hungary_tdm)
@@ -68,11 +70,11 @@ v <- sort(rowSums(m), decreasing = TRUE)
 d <- data.frame(word = names(v), freq = v)
 
 
-head(d, 10)
+head(d, 20)
 
 #Cleaning
 
-hungary <- tm_map(hungary, removeWords, c("can", "must", "like"))
+hungary <- tm_map(hungary, removeWords, c("one", "see", "need", "now", "new"))
 
 hungary_tdm <- TermDocumentMatrix(hungary) 
 m <- as.matrix(hungary_tdm)
@@ -80,18 +82,54 @@ v <- sort(rowSums(m), decreasing = TRUE)
 d <- data.frame(word = names(v), freq = v)
 
 
-head(d, 10)
+head(d, 20)
 
 #Cleaning
 
-hungary <- tm_map(hungary, removeWords, c("country", "central"))
+hungary <- tm_map(hungary, removeWords, c("just", "increase", "western"))
 
 hungary_tdm <- TermDocumentMatrix(hungary) 
 m <- as.matrix(hungary_tdm)
 v <- sort(rowSums(m), decreasing = TRUE)
 d <- data.frame(word = names(v), freq = v)
 
-head(d, 10)
+head(d, 20)
+
+#Cleaning
+
+hungary <- tm_map(hungary, removeWords, c("time", "hungarians"))
+
+hungary_tdm <- TermDocumentMatrix(hungary) 
+m <- as.matrix(hungary_tdm)
+v <- sort(rowSums(m), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+
+head(d, 20)
+
+#Cleaning
+
+hungary <- tm_map(hungary, removeWords, c("today", "number"))
+
+hungary_tdm <- TermDocumentMatrix(hungary) 
+m <- as.matrix(hungary_tdm)
+v <- sort(rowSums(m), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+
+head(d, 20)
+
+#Cleaning
+
+hungary <- tm_map(hungary, removeWords, c("approach"))
+
+hungary_tdm <- TermDocumentMatrix(hungary) 
+m <- as.matrix(hungary_tdm)
+v <- sort(rowSums(m), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+
+head(d, 20)
+
+hungarytable <- head(d, 20)
+grid.table(hungarytable)
 
 #Generate the Word Cloud
 
@@ -106,6 +144,7 @@ findAssocs(hungary_tdm, terms = "hungary", corlimit = 0.3)
 
 head(d, 10)
 
-#Plot word frequencies
+#Plot word frequencies To see top 10 words, do not forget to run head(d, 10) before this code.
 
 barplot(d[1:10,]$freq, las = 2, names.arg = d[1:10,]$word, col = "blue", main = "Most Frequent Words - Viktor Orban", ylab = "Word Frequencies", cex.names = 0.75)
+
